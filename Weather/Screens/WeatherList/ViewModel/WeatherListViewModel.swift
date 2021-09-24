@@ -9,24 +9,6 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class Scheduler {
-    static var userInitiatedScheduler: OperationQueue = {
-        let operationQueue = OperationQueue()
-        operationQueue.maxConcurrentOperationCount = 5
-        operationQueue.qualityOfService = QualityOfService.userInitiated
-        return operationQueue
-    }()
-    
-    static var backgroundScheduler: OperationQueue = {
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 5
-        queue.qualityOfService = QualityOfService.background
-        return queue
-    }()
-
-    static let mainScheduler = RunLoop.main
-}
-
 struct WeatherListViewModelInput {
     let loadView: PublishRelay<Void>
     let search: PublishRelay<String>
@@ -64,20 +46,21 @@ final class WeatherListViewModel: WeatherListViewModelType {
     
     private var disposeBag = DisposeBag()
     init(service: WeatherServiceType,
-         config: WeatherConfigType,
-         mainScheduler: SchedulerType = MainScheduler.instance) {
+         config: WeatherConfigType) {
         self.service = service
         self.config = config
     }
     
     
     func transform(input: WeatherListViewModelInput) -> WeatherListViewModelOutput {
-        let initialState = PublishRelay<SearchWeatherState>()
+        let initialState = input.loadView.map{ _ in SearchWeatherState.empty }
         let searchTerm = input.search
             .debounce(.milliseconds(300), scheduler: config.mainScheduler)
             .filter{$0.count > 3}
 
-        let searchResult = searchTerm.flatMapLatest { [unowned self] searchTerm in
+        let searchResult = searchTerm
+            .debug("v-anh searchTerm", trimOutput: false)
+            .flatMapLatest { [unowned self] searchTerm in
                 self.service.getWeather(searchTerm: searchTerm,
                                         units: self.config.unit)
             }
@@ -87,7 +70,7 @@ final class WeatherListViewModel: WeatherListViewModelType {
             .filter(\.isEmpty)
             .map{ _ in SearchWeatherState.empty}
         
-        let weatherState = Observable.merge(initialState.asObservable(),searchResult,emptySearchInput)
+        let weatherState = Observable.merge(initialState,searchResult,emptySearchInput)
         return WeatherListViewModelOutput(weatherSearchOutput: weatherState.asDriver(onErrorJustReturn: .empty))
     }
 }

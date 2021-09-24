@@ -62,6 +62,7 @@ final class Cache<Key: Hashable, Value> {
         guard let entry = cache.object(forKey: WrappedKey(key)) else {
             return nil
         }
+        print("v-anh get cache at :\(key)")
         switch self.cacheType {
         case .expirable:
             guard let expirationDate = entry.expirationDate,
@@ -69,10 +70,10 @@ final class Cache<Key: Hashable, Value> {
                 removeValue(forKey: key)
                 return nil
             }
+            return entry.value
         case .system:
             return entry.value
         }
-        return nil
     }
     
     func removeValue(forKey key: Key) {

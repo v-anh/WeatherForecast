@@ -31,16 +31,21 @@ extension URLSessionNetworkService {
         guard let request = request.urlRequest(with: self.environment) else {
             return .just(.failure(APIError.badRequest))
         }
-        if let cacheData = cache.object(ofType: type.self, forKey: request) {
+        if let url = request.url,
+           let cacheData = cache.object(ofType: type.self, forKey: url) {
             return .just(.success(cacheData))
         }
         return session.rx.response(request: request)
-            .map { response,data  -> APIResponse<T> in
+            .map { [weak self] response,data  -> APIResponse<T> in
+                guard let self = self else {return .failure(.unknown)}
                 let result = self.verify(data: data, urlResponse: response)
                 switch result {
                 case .success(let data):
                     do {
                         let decodedData = try JSONDecoder().decode(T.self, from: data)
+                        if let url = request.url {
+                            self.cache.setObject(decodedData, forKey: url)
+                        }
                         return .success(decodedData)
                     } catch {
                         return .failure(APIError.invalidResponse)

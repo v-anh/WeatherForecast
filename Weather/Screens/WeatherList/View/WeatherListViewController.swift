@@ -74,6 +74,7 @@ extension WeatherListViewController {
         case .empty:
             self.updateDataSource([])
             self.finishLoading()
+            self.tableView.setEmptyMessage("How is the weather?")
         case .loaded(let weatherList):
             self.finishLoading()
             self.updateDataSource(weatherList)
@@ -93,7 +94,8 @@ extension WeatherListViewController {
     private func setupTableView() {
         tableView.tableFooterView = UIView()
         tableView.dataSource = dataSource
-        tableView.register(UINib(nibName: WeatherTableViewCell.className, bundle: nil), forCellReuseIdentifier: WeatherTableViewCell.identifier)
+        tableView.register(UINib(nibName: WeatherTableViewCell.className, bundle: nil),
+                           forCellReuseIdentifier: WeatherTableViewCell.identifier)
     }
     
     private func configdataSource() -> DataSource {
@@ -113,7 +115,7 @@ extension WeatherListViewController {
         var snapshot = Snapshot()
         snapshot.appendSections([.weatherList])
         snapshot.appendItems(weatherList, toSection: .weatherList)
-        dataSource.apply(snapshot, animatingDifferences: false)
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 

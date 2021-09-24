@@ -30,7 +30,7 @@ public final class ImageCache: ImageCacheType {
 }
 
 protocol ImageLoaderType {
-    func loadImage(from url: URL, size: CGSize) -> AnyPublisher<UIImage?, Never>
+    func loadImage(from url: URL, size: CGSize) -> Observable<UIImage?>
 }
 public final class ImageLoader: NSObject {
     public static let shared = ImageLoader()
