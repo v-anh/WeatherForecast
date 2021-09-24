@@ -54,6 +54,21 @@ class WeatherTableViewCell: UITableViewCell {
         humidityTitle.text = "Humidity:"
         descriptionTitle.text = "Description:"
 
+        let viewStyle = ViewStyle<UILabel>().with {
+            $0.font = .preferredFont(forTextStyle: .body)
+            $0.adjustsFontForContentSizeCategory = true
+        }
+        viewStyle.apply(to: tempValue)
+        viewStyle.apply(to: dateTitle)
+        viewStyle.apply(to: tempTitle)
+        viewStyle.apply(to: presureTitle)
+        viewStyle.apply(to: humidityTitle)
+        viewStyle.apply(to: descriptionTitle)
+        viewStyle.apply(to: tempValue)
+        viewStyle.apply(to: dateValue)
+        viewStyle.apply(to: presureValue)
+        viewStyle.apply(to: humidityValue)
+        viewStyle.apply(to: descriptionValue)
     }
     
     func bindModel(_ model: WeatherDisplayModel) {
@@ -73,7 +88,7 @@ class WeatherTableViewCell: UITableViewCell {
         presureValue.text = "\(model.pressure)"
         humidityValue.text = "\(model.humidity)%"
         descriptionValue.text = model.description
-        
+        Accessibility(label: "\(model.description)", hint: "", trails: .image).apply(to: weatherIcon)
     }
     
 }

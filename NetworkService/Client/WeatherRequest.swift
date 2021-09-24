@@ -7,8 +7,6 @@
 
 import Foundation
 struct WeatherRequest:RequestType {
-    typealias Response = WeatherResponseModel
-    
     let searchTerm: String
     let units: String
     var path: String {

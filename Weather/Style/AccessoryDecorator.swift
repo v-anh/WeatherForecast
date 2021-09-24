@@ -5,7 +5,7 @@
 //  Created by Anh Tran on 24/09/2021.
 //
 
-import Foundation
+import UIKit
 protocol AccessoryDecorator {
     associatedtype Target
     var label: String { get }
@@ -13,6 +13,8 @@ protocol AccessoryDecorator {
     @discardableResult
     func apply(to target: Target) -> Target
 }
+
+
 struct Accessibility:AccessoryDecorator  {
     typealias Target = NSObject
     let label: String

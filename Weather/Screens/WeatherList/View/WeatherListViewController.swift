@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+
 class WeatherListViewController: BaseViewController {
     
     private typealias DataSource = UITableViewDiffableDataSource<WeatherListViewModel.WeatherSection, WeatherDisplayModel>
@@ -23,6 +24,9 @@ class WeatherListViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.tintColor = .label
         searchController.searchBar.delegate = self
+        Accessibility(label: "Search text field",
+                      hint: "Search weather today, just type the city you want to know!", trails: .none)
+            .apply(to: searchController.searchBar.searchTextField)
         return searchController
     }()
     

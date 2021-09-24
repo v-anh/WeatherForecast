@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "static Decodable.loadFromFile(_:):Decodeable+Extension.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Bundle.main">
+            </PersistentString>
+            <PersistentString
+               value = "Bundle(for: WeatherTests.self)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Cache.insert(_:forKey:):Cache.swift">
+      </ContextState>
+      <ContextState
+         contextName = "Cache.Entry.init(value:expirationDate:):Cache.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in WeatherListViewController.searchController.getter:WeatherListViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "">
+            </PersistentString>
+            <PersistentString
+               value = "searchController.searchBar.searchTextField.accessibilityHint">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
