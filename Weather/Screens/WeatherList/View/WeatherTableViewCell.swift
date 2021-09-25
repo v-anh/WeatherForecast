@@ -83,10 +83,10 @@ class WeatherTableViewCell: UITableViewCell {
                 }
             }).disposed(by: disposeBag)
         
-        tempValue.text = "\(model.averageTemp)"
+        tempValue.text = String(format: "%.0f%@", model.averageTemp, model.unitType.toString)
         dateValue.text = dateFormatter.string(from: Date(timeIntervalSince1970: model.date))
-        presureValue.text = "\(model.pressure)"
-        humidityValue.text = "\(model.humidity)%"
+        presureValue.text = String(format: "%.0f", model.pressure)
+        humidityValue.text = String(format: "%.0f", model.humidity)
         descriptionValue.text = model.description
         Accessibility(label: "\(model.description)", hint: "", trails: .image).apply(to: weatherIcon)
     }

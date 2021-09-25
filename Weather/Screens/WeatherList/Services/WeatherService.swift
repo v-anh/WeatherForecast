@@ -9,8 +9,15 @@ import Foundation
 import RxSwift
 
 typealias GetWeatherResult = Result<WeatherResponseModel,APIError>
+
+struct WeatherSearchParameter {
+    let searchTerm: String
+    let unit: String
+    let cnt: Float
+}
+
 protocol WeatherServiceType {
-    func getWeather(searchTerm: String, units: String) -> Observable<GetWeatherResult>
+    func getWeather(_ parameter: WeatherSearchParameter) -> Observable<GetWeatherResult>
 }
 
 public struct WeatherService: WeatherServiceType {
@@ -19,8 +26,10 @@ public struct WeatherService: WeatherServiceType {
     public init(_ networkService: NetworkServiceType) {
         self.networkService = networkService
     }
-    func getWeather(searchTerm: String, units: String) -> Observable<GetWeatherResult> {
-        let weatherRequest = WeatherRequest(searchTerm: searchTerm, units: units)
+    func getWeather(_ parameter: WeatherSearchParameter) -> Observable<GetWeatherResult> {
+        let weatherRequest = WeatherRequest(searchTerm: parameter.searchTerm,
+                                            units: parameter.unit,
+                                            cnt: parameter.cnt)
         
         return networkService.request(weatherRequest, type: WeatherResponseModel.self)
     }

@@ -1,36 +1,40 @@
 //
-//  File.swift
+//  Cacheable.swift
 //  Weather
 //
-//  Created by Anh Tran on 23/09/2021.
+//  Created by Anh Tran on 25/09/2021.
 //
 
 import Foundation
-public protocol Cacheable {
-    func setObject<T:Decodable>(_ object: T, forKey key: URL)
-    func object<T:Decodable>(ofType type: T.Type, forKey key: URL) -> T?
+import RxSwift
+
+enum CacheError: Swift.Error {
+    case insert
+    case getObject
+}
+protocol CacheProtocol {
+    associatedtype T
+    associatedtype K
+    func insert<T:Encodable>(object: T, key: K) -> Observable<Void>
+    func object<T:Decodable>(for key: String, type:T.Type) -> Observable<T>
 }
 
-public struct URLResponseCache: Cacheable{
+final class Cache: CacheProtocol {
+    typealias T = Codable
+    typealias K = String
     
-    static let `default` = {
-        URLResponseCache(dateProvider: {
-                            Date.init()
-        },lifeTime: 100)
-    }()
+    public static let shared = Cache()
     
-    private let cache: Cache<URL,Decodable>
+    private init() {}
     
-    init(dateProvider: @escaping () -> Date = Date.init, lifeTime:TimeInterval) {
-        cache = Cache<URL,Decodable>(.expirable(lifeTime),
-                                            currentDate: dateProvider)
-    }
-
-    public func setObject<T:Decodable>(_ object: T, forKey key: URL) {
-        cache.insert(object, forKey: key)
+    private let cache = PersistentCache<T, K>(path: "EncodebleCache")
+    
+    func insert<T>(object: T, key: String) -> Observable<Void> where T : Encodable {
+        cache.insert(object: object, key: key)
     }
     
-    public func object<T:Decodable>(ofType type: T.Type, forKey key: URL) -> T? {
-        cache.value(forKey: key) as? T
+    func object<T>(for key: String, type:T.Type) -> Observable<T>  where T : Decodable {
+        cache.object(for: key, type: type)
     }
+    
 }

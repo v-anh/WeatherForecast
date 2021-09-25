@@ -16,16 +16,16 @@ public protocol ImageCacheType {
 
 public final class ImageCache: ImageCacheType {
     
-    private let imageCache = Cache<String,UIImage>(.system)
+    private let imageCache = NSCache<NSString,UIImage>()
     
     public init(){}
     
     public func setImage(_ image: UIImage, key: String) {
-        imageCache.insert(image, forKey: key)
+        imageCache.setObject(image, forKey: NSString(string: key))
     }
     
     public func getImage(key: String) -> UIImage? {
-        return imageCache.value(forKey: key)
+        return imageCache.object(forKey: NSString(string: key))
     }
 }
 

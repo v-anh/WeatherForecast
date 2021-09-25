@@ -9,8 +9,9 @@ import Foundation
 struct WeatherRequest:RequestType {
     let searchTerm: String
     let units: String
+    let cnt:Float
     var path: String {
-        "data/2.5/forecast/daily"
+        "data/\(cnt)/forecast/daily"
     }
     var method: Method {
         .get

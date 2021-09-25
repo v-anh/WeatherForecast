@@ -8,6 +8,7 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import RxSwiftExt
 
 struct WeatherListViewModelInput {
     let loadView: PublishRelay<Void>
@@ -21,20 +22,6 @@ protocol WeatherListViewModelType {
     func transform(input: WeatherListViewModelInput) -> WeatherListViewModelOutput
 }
 
-protocol WeatherConfigType {
-    var unit: String {get}
-    var mainScheduler: SchedulerType {get}
-}
-
-struct WeatherConfig: WeatherConfigType {
-    var unit: String {
-        "metric"
-    }
-    var mainScheduler: SchedulerType {
-        MainScheduler.instance
-    }
-}
-
 final class WeatherListViewModel: WeatherListViewModelType {
     
     enum WeatherSection: CaseIterable {
@@ -42,15 +29,17 @@ final class WeatherListViewModel: WeatherListViewModelType {
     }
     
     let service: WeatherServiceType
+    let cache: WeatherCacheServiceType
     let config: WeatherConfigType
     
     private var disposeBag = DisposeBag()
     init(service: WeatherServiceType,
-         config: WeatherConfigType) {
+         config: WeatherConfigType,
+         cache: WeatherCacheServiceType = WeatherCacheService()) {
         self.service = service
         self.config = config
+        self.cache = cache
     }
-    
     
     func transform(input: WeatherListViewModelInput) -> WeatherListViewModelOutput {
         let initialState = input.loadView.map{ _ in SearchWeatherState.empty }
@@ -58,35 +47,75 @@ final class WeatherListViewModel: WeatherListViewModelType {
             .debounce(.milliseconds(300), scheduler: config.mainScheduler)
             .filter{$0.count > 3}
 
-        let searchResult = searchTerm
-            .debug("v-anh searchTerm", trimOutput: false)
+        let cachedResult = searchTerm
             .flatMapLatest { [unowned self] searchTerm in
-                self.service.getWeather(searchTerm: searchTerm,
-                                        units: self.config.unit)
+                return self.cache.getWeather(key: searchTerm).materialize()
             }
-            .map(weatherResultTranform(_:))
+            .elements()
+            .map{ [unowned self] model -> SearchWeatherState in
+                let displayModels = Self.makeDisplayModels(model.list,
+                                                           unitType: self.config.unit)
+                return SearchWeatherState.loaded(displayModels)
+            }.debug("v-anh load from cache", trimOutput: true)
+            .share()
+        
+        let requestParameter = searchTerm.map { [unowned self] searchTerm in
+            return WeatherSearchParameter(searchTerm: searchTerm,
+                                          unit: self.config.unit.parameter,
+                                          cnt: self.config.cnt)
+        }
+        
+        let searchRequest = requestParameter
+            .flatMapLatest { [unowned self] parameter -> Observable<GetWeatherResult> in
+                return self.service.getWeather(parameter)
+            }.debug("v-anh fetch from server", trimOutput: true)
+            .share(replay: 1, scope: .whileConnected)
+              
+        searchRequest
+            .map { try? $0.get() }
+            .unwrap()
+            .withLatestFrom(requestParameter) {($0,$1)}
+            .flatMap { [unowned self] response, parameter in
+                self.cache
+                    .setWeather(response, key: Self.makeWeatherReponseCacheKey(parameter))
+                    .catch { _ in return .just(()) }
+            }.subscribe()
+            .disposed(by: disposeBag)
+        
+        let searchResult = searchRequest
+            .map{ [unowned self ] result -> SearchWeatherState in
+                return Self.weatherResultTranform(result,
+                                                  unitType: self.config.unit)}
+        
+        let result = Observable.merge(searchResult,cachedResult)
         
         let emptySearchInput = input.search
             .filter(\.isEmpty)
             .map{ _ in SearchWeatherState.empty}
         
-        let weatherState = Observable.merge(initialState,searchResult,emptySearchInput)
+        let weatherState = Observable.merge(initialState,result,emptySearchInput)
         return WeatherListViewModelOutput(weatherSearchOutput: weatherState.asDriver(onErrorJustReturn: .empty))
     }
 }
 
 extension WeatherListViewModel {
-    private func weatherResultTranform(_ result: GetWeatherResult) -> SearchWeatherState {
+    
+    private static func makeWeatherReponseCacheKey(_ parameter: WeatherSearchParameter) -> String {
+        return parameter.searchTerm +
+            parameter.unit +
+           " \(parameter.cnt)"
+    }
+    private static func weatherResultTranform(_ result: GetWeatherResult, unitType: Unit) -> SearchWeatherState {
         switch result {
         case .success(let data):
-            let displayModels = makeDisplayModels(data.list)
+            let displayModels = makeDisplayModels(data.list, unitType: unitType)
             return displayModels.isEmpty ? .empty : .loaded(displayModels)
         case .failure(let error):
             return .haveError(error)
         }
     }
     
-    private func makeDisplayModels(_ weatherList: [WeatherFactor]?) -> [WeatherDisplayModel] {
+    private static func makeDisplayModels(_ weatherList: [WeatherFactor]?, unitType: Unit) -> [WeatherDisplayModel] {
         guard let weatherList = weatherList,
               !weatherList.isEmpty else {return []}
         
@@ -108,7 +137,8 @@ extension WeatherListViewModel {
                                 pressure: pressure,
                                 humidity: humidity,
                                 description: description,
-                                iconUrl: url)
+                                iconUrl: url,
+                                unitType: unitType)
         }
     }
 }

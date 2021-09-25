@@ -14,14 +14,21 @@ final class URLSessionNetworkService: NetworkServiceType {
     var environment: EnvironmentProtocol
     
     private let session: URLSession
-    let cache: Cacheable
+    
+    public convenience init() {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 30
+        config.waitsForConnectivity = true
+        
+        let environment = APIEnvironment.development
+        self.init(session: URLSession(configuration: config),
+                  enviroment: environment)
+    }
 
-    init(session: URLSession = URLSession(configuration: URLSessionConfiguration.ephemeral),
-         enviroment: EnvironmentProtocol = APIEnvironment.development,
-         cache: Cacheable = URLResponseCache.default) {
+    init(session: URLSession,
+         enviroment: EnvironmentProtocol) {
         self.session = session
         self.environment = enviroment
-        self.cache = cache
     }
     
 }
@@ -31,30 +38,25 @@ extension URLSessionNetworkService {
         guard let request = request.urlRequest(with: self.environment) else {
             return .just(.failure(APIError.badRequest))
         }
-        if let url = request.url,
-           let cacheData = cache.object(ofType: type.self, forKey: url) {
-            return .just(.success(cacheData))
-        }
-        return session.rx.response(request: request)
-            .map { [weak self] response,data  -> APIResponse<T> in
-                guard let self = self else {return .failure(.unknown)}
+        return Observable<APIResponse<T>>.create { [weak self] observer in
+            return URLSession.shared.rx.response(request: request).subscribe { [weak self] response, data in
+                guard let self = self else {return observer.onNext(.failure(.badRequest))}
                 let result = self.verify(data: data, urlResponse: response)
                 switch result {
                 case .success(let data):
                     do {
                         let decodedData = try JSONDecoder().decode(T.self, from: data)
-                        if let url = request.url {
-                            self.cache.setObject(decodedData, forKey: url)
-                        }
-                        return .success(decodedData)
+                        return observer.onNext(.success(decodedData))
                     } catch {
-                        return .failure(APIError.invalidResponse)
+                        return observer.onNext(.failure(APIError.invalidResponse))
                     }
                 case .failure(let error):
-                    return .failure(error)
-
+                    return observer.onNext(.failure(error))
+                    
                 }
             }
+        }
+            
     }
     
     private func verify(data: Data?, urlResponse: HTTPURLResponse) -> Result<Data, APIError> {

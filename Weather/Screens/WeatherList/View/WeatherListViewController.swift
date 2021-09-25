@@ -119,7 +119,9 @@ extension WeatherListViewController {
         var snapshot = Snapshot()
         snapshot.appendSections([.weatherList])
         snapshot.appendItems(weatherList, toSection: .weatherList)
-        dataSource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapshot, animatingDifferences: true)
+        }
     }
 }
 
