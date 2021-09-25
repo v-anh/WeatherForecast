@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 protocol WeatherConfigType {
-    var unit: Unit {get}
+    var unit: UnitType {get}
     var cnt: Float {get}
     var mainScheduler: SchedulerType {get}
 }
@@ -17,8 +17,8 @@ struct WeatherConfig: WeatherConfigType {
     var cnt: Float {
         return 2.5
     }
-    var unit: Unit {
-        Unit.Celsius
+    var unit: UnitType {
+        UnitType.Celsius
     }
     var mainScheduler: SchedulerType {
         MainScheduler.instance

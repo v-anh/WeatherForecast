@@ -46,10 +46,16 @@ final class WeatherListViewModel: WeatherListViewModelType {
         let searchTerm = input.search
             .debounce(.milliseconds(300), scheduler: config.mainScheduler)
             .filter{$0.count > 3}
+        
+        let requestParameter = searchTerm.map { [unowned self] searchTerm in
+            return WeatherSearchParameter(searchTerm: searchTerm,
+                                          unit: self.config.unit.parameter,
+                                          cnt: self.config.cnt)
+        }
 
-        let cachedResult = searchTerm
-            .flatMapLatest { [unowned self] searchTerm in
-                return self.cache.getWeather(key: searchTerm).materialize()
+        let cachedResult = requestParameter
+            .flatMapLatest { [unowned self] parameter in
+                return self.cache.getWeather(key: Self.makeWeatherReponseCacheKey(parameter)).materialize()
             }
             .elements()
             .map{ [unowned self] model -> SearchWeatherState in
@@ -58,12 +64,6 @@ final class WeatherListViewModel: WeatherListViewModelType {
                 return SearchWeatherState.loaded(displayModels)
             }.debug("v-anh load from cache", trimOutput: true)
             .share()
-        
-        let requestParameter = searchTerm.map { [unowned self] searchTerm in
-            return WeatherSearchParameter(searchTerm: searchTerm,
-                                          unit: self.config.unit.parameter,
-                                          cnt: self.config.cnt)
-        }
         
         let searchRequest = requestParameter
             .flatMapLatest { [unowned self] parameter -> Observable<GetWeatherResult> in
@@ -103,9 +103,9 @@ extension WeatherListViewModel {
     private static func makeWeatherReponseCacheKey(_ parameter: WeatherSearchParameter) -> String {
         return parameter.searchTerm +
             parameter.unit +
-           " \(parameter.cnt)"
+           "\(parameter.cnt)"
     }
-    private static func weatherResultTranform(_ result: GetWeatherResult, unitType: Unit) -> SearchWeatherState {
+    private static func weatherResultTranform(_ result: GetWeatherResult, unitType: UnitType) -> SearchWeatherState {
         switch result {
         case .success(let data):
             let displayModels = makeDisplayModels(data.list, unitType: unitType)
@@ -115,7 +115,7 @@ extension WeatherListViewModel {
         }
     }
     
-    private static func makeDisplayModels(_ weatherList: [WeatherFactor]?, unitType: Unit) -> [WeatherDisplayModel] {
+    private static func makeDisplayModels(_ weatherList: [WeatherFactor]?, unitType: UnitType) -> [WeatherDisplayModel] {
         guard let weatherList = weatherList,
               !weatherList.isEmpty else {return []}
         

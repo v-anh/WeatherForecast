@@ -13,7 +13,7 @@ public struct WeatherDisplayModel {
     let humidity: Double
     let description: String
     let iconUrl: URL
-    let unitType: Unit
+    let unitType: UnitType
 }
 extension WeatherDisplayModel: Hashable {
     public static func == (lhs: WeatherDisplayModel, rhs: WeatherDisplayModel) -> Bool {

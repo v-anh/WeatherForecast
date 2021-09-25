@@ -6,7 +6,7 @@
 //
 
 import Foundation
-enum Unit {
+enum UnitType {
     case Kelvin
     case Celsius
     case Fahrenheit
@@ -23,7 +23,7 @@ enum Unit {
     }
 }
 
-extension Unit {
+extension UnitType {
     var toString: String {
         switch self {
         case .Kelvin:

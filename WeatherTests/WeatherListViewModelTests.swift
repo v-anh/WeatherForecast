@@ -13,13 +13,17 @@ import RxTest
 
 
 struct WeatherConfigMock: WeatherConfigType {
+    var unit: UnitType = .Celsius
+    
+    var cnt: Float = 2.5
+    
     var mainScheduler: SchedulerType = MainScheduler.instance
-    var unit: String  = "metric"
 }
 class WeatherListViewModelTests: XCTestCase {
 
     var viewModel: WeatherListViewModel!
     var serviceMock: WeatherServiceMock!
+    var cacheMock: WeatherCacheServiceMock!
     var config: WeatherConfigMock!
     var scheduler: TestScheduler!
 
@@ -28,9 +32,12 @@ class WeatherListViewModelTests: XCTestCase {
         disposeBag = DisposeBag()
         scheduler = TestScheduler(initialClock: 0)
         serviceMock = WeatherServiceMock()
+        cacheMock = WeatherCacheServiceMock()
         config = WeatherConfigMock()
         config.mainScheduler = scheduler
-        viewModel = WeatherListViewModel(service: serviceMock, config: config)
+        viewModel = WeatherListViewModel(service: serviceMock,
+                                         config: config,
+                                         cache: cacheMock)
     }
     
     override func tearDown() {
@@ -39,6 +46,8 @@ class WeatherListViewModelTests: XCTestCase {
         disposeBag = nil
     }
     
+    
+    //MARK: Test Weather Success Flow
     func testShouldReturnEmptyStateWhenLoadView() {
         //Given input loadview
         let loadView = PublishRelay<Void>()
@@ -68,7 +77,7 @@ class WeatherListViewModelTests: XCTestCase {
         
         let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
                                                                           search: search))
-        output.weatherSearchOutput.debug("v-anh", trimOutput: false)
+        output.weatherSearchOutput
             .drive(result)
             .disposed(by: disposeBag)
         
@@ -80,8 +89,8 @@ class WeatherListViewModelTests: XCTestCase {
         //Then expect output should be empty state and just one event emitted
         XCTAssertEqual(result.events.count,2)
         XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty,.loaded([.mockExpected()])])
-        XCTAssertEqual(serviceMock.searchTerm,"saigon")
-        XCTAssertEqual(serviceMock.units,"metric")
+        XCTAssertEqual(serviceMock.parameter?.searchTerm,"saigon")
+        XCTAssertEqual(serviceMock.parameter?.unit,"metric")
     }
     
     func testShouldNotTriggerSearchRequestWhenTriggerSearchTermTooShort() {
@@ -106,7 +115,7 @@ class WeatherListViewModelTests: XCTestCase {
         XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty])
     }
     
-    func testShouldDebounceBeforeTriggerSearchTearm() {
+    func testShouldDebounceBeforeTriggerSearchTerm() {
         //Given ViewModel input
         let loadView = PublishRelay<Void>()
         let search = PublishRelay<String>()
@@ -129,7 +138,59 @@ class WeatherListViewModelTests: XCTestCase {
         //Then expect just last searchterm be triggered and output should be two even is empty and loaded
         XCTAssertEqual(result.events.count,2)
         XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty, .loaded([.mockExpected()])])
-        XCTAssertEqual(serviceMock.searchTerm,"Saigon")
-        XCTAssertEqual(serviceMock.units,"metric")
+        XCTAssertEqual(serviceMock.parameter?.searchTerm,"Saigon")
+        XCTAssertEqual(serviceMock.parameter?.unit,"metric")
+        XCTAssertEqual(serviceMock.parameter?.cnt,2.5)
     }
+    
+    
+    //MARK: - Test Search Weather Flow With Cache
+    func testShouldReturnCacheWhenCacheAvailabelForSeachWeather() {
+        //Given ViewModel input & Mock cache data
+        let loadView = PublishRelay<Void>()
+        let search = PublishRelay<String>()
+        let result = scheduler.createObserver(SearchWeatherState.self)
+        cacheMock.mockResult = .just(.stub())
+        
+        let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
+                                                                          search: search))
+        output.weatherSearchOutput
+            .drive(result)
+            .disposed(by: disposeBag)
+        
+        //When trigger loadview and search
+        loadView.accept(())
+        search.accept("saigon")
+        scheduler.start()
+        
+        //Then expect output should be three events: init as empty, loaded with cache and server response
+        XCTAssertEqual(result.events.count,3)
+        XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty,.loaded([.mockExpected()]),.loaded([.mockExpected()])])
+        XCTAssertEqual(serviceMock.parameter?.searchTerm,"saigon")
+        XCTAssertEqual(serviceMock.parameter?.unit,"metric")
+        XCTAssertEqual(cacheMock.getWeatherKeyHooked,"saigonmetric2.5")
+    }
+    
+    func testShouldPersistWeatherDataToCacheAfterFetchFromServer() {
+        //Given ViewModel input with invalid cache
+        let loadView = PublishRelay<Void>()
+        let search = PublishRelay<String>()
+        
+        let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
+                                                                          search: search))
+        output.weatherSearchOutput
+            .drive()
+            .disposed(by: disposeBag)
+        
+        //When trigger loadview and search
+        loadView.accept(())
+        search.accept("saigon")
+        scheduler.start()
+        
+        //Then expect output should be three events: init as empty, loaded with cache and server response
+        XCTAssertEqual(cacheMock.setWeatherKeyHooked,"saigonmetric2.5")
+        XCTAssertEqual(cacheMock.weatherParameterhook?.cod,WeatherResponseModel.stub().cod)
+    }
+    
+    
 }
