@@ -14,7 +14,7 @@ final class PersistentCache<T,K:Hashable> {
     init(path: String) {
         self.path = path
     }
-    func insert<T>(object: T, key: K) -> Observable<Void> where T : Encodable {
+    func set<T>(object: T, key: K) -> Observable<Void> where T : Encodable {
         return Observable.create { observer -> Disposable in
             guard let url = self.directoryURL() else {
                 return Disposables.create()
@@ -26,7 +26,7 @@ final class PersistentCache<T,K:Hashable> {
                 try data.write(to: path)
                 observer.onNext(())
             } catch {
-                observer.onError(CacheError.insert)
+                observer.onError(CacheError.cache)
             }
             
             return Disposables.create()
@@ -44,7 +44,7 @@ final class PersistentCache<T,K:Hashable> {
                 let decodedData = try JSONDecoder().decode(type.self, from: data)
                 observer.onNext(decodedData)
             } catch {
-                observer.onError(CacheError.insert)
+                observer.onError(CacheError.cache)
             }
             return Disposables.create()
         }

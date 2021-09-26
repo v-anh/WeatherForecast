@@ -51,7 +51,7 @@ final class WeatherListViewModel: WeatherListViewModelType {
             return WeatherSearchParameter(searchTerm: searchTerm,
                                           unit: self.config.unit.parameter,
                                           cnt: self.config.cnt)
-        }
+        }.share()
 
         let cachedResult = requestParameter
             .flatMapLatest { [unowned self] parameter in

@@ -9,14 +9,12 @@ import Foundation
 import RxSwift
 
 enum CacheError: Swift.Error {
-    case insert
+    case cache
     case getObject
 }
 protocol CacheProtocol {
-    associatedtype T
-    associatedtype K
-    func insert<T:Encodable>(object: T, key: K) -> Observable<Void>
-    func object<T:Decodable>(for key: String, type:T.Type) -> Observable<T>
+    func set<T:Encodable>(object: T, key: String) -> Observable<Void>
+    func get<T:Decodable>(for key: String, type:T.Type) -> Observable<T>
 }
 
 final class Cache: CacheProtocol {
@@ -29,11 +27,11 @@ final class Cache: CacheProtocol {
     
     private let cache = PersistentCache<T, K>(path: "EncodebleCache")
     
-    func insert<T>(object: T, key: String) -> Observable<Void> where T : Encodable {
-        cache.insert(object: object, key: key)
+    func set<T>(object: T, key: String) -> Observable<Void> where T : Encodable {
+        cache.set(object: object, key: key)
     }
     
-    func object<T>(for key: String, type:T.Type) -> Observable<T>  where T : Decodable {
+    func get<T>(for key: String, type:T.Type) -> Observable<T>  where T : Decodable {
         cache.object(for: key, type: type)
     }
     

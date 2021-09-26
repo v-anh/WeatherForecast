@@ -36,7 +36,7 @@ class CacheServiceTests: XCTestCase {
         
         //Then
         XCTAssertEqual(mockCache.objectHooked as? WeatherResponseModel, object)
-        XCTAssertEqual(mockCache.insertKeyHooked, key)
+        XCTAssertEqual(mockCache.setKeyHooked, key)
     }
     
     func testCacheserviceShouldGetFromCache() {
@@ -62,19 +62,18 @@ class CacheServiceTests: XCTestCase {
 
 
 class CacheMock: CacheProtocol {
-
     var objectHooked: Encodable?
-    var insertKeyHooked: String?
-    func insert<T>(object: T, key: String) -> Observable<Void> where T : Encodable {
+    var setKeyHooked: String?
+    func set<T>(object: T, key: String) -> Observable<Void> where T : Encodable {
         objectHooked = object
-        insertKeyHooked = key
+        setKeyHooked = key
         return .just(())
     }
     
     var typeHooked: Decodable.Type?
     var objectKeyHooked: String?
     var mockReturn: WeatherResponseModel!
-    func object<T>(for key: String, type: T.Type) -> Observable<T> where T : Decodable {
+    func get<T>(for key: String, type: T.Type) -> Observable<T> where T : Decodable {
         objectKeyHooked = key
         typeHooked = type
         return .just(mockReturn as! T)

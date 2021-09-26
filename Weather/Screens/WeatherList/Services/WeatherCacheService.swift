@@ -19,10 +19,10 @@ struct WeatherCacheService: WeatherCacheServiceType {
         self.cache = cache
     }
     func setWeather(_ weather: WeatherResponseModel, key: String) -> Observable<Void>{
-        return cache.insert(object: weather, key: key)
+        return cache.set(object: weather, key: key)
     }
     
     func getWeather(key: String) -> Observable<WeatherResponseModel> {
-        return cache.object(for: key,type: WeatherResponseModel.self)
+        return cache.get(for: key,type: WeatherResponseModel.self)
     }
 }
