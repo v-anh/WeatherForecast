@@ -7,14 +7,17 @@
 
 import Foundation
 import RxSwift
-
 protocol WeatherCacheServiceType {
     func getWeather(key: String) -> Observable<WeatherResponseModel>
     func setWeather(_ weather: WeatherResponseModel ,key: String) -> Observable<Void>
 }
 
 struct WeatherCacheService: WeatherCacheServiceType {
-    let cache = Cache.shared
+    let cache:CacheProtocol
+    
+    init(_ cache: CacheProtocol = Cache.shared) {
+        self.cache = cache
+    }
     func setWeather(_ weather: WeatherResponseModel, key: String) -> Observable<Void>{
         return cache.insert(object: weather, key: key)
     }

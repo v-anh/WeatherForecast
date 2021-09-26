@@ -304,7 +304,30 @@ class WeatherListViewModelTests: XCTestCase {
     }
     
     //Clear search term should back to emtpy
-    
+    func testShouldClearResultWhenSearchTermIsEmpty() {
+        //Given ViewModel input
+        let loadView = PublishRelay<Void>()
+        let search = PublishRelay<String>()
+        let result = scheduler.createObserver(SearchWeatherState.self)
+        
+        //Bind data to output
+        let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
+                                                                          search: search))
+        output.weatherSearchOutput
+            .drive(result)
+            .disposed(by: disposeBag)
+        loadView.accept(())
+        
+        //When trigger multiple search
+        scheduler.createColdObservable([.next(0, "Saigon"),.next(5, "")])
+            .bind(to: search)
+            .disposed(by: disposeBag)
+        scheduler.start()
+        
+        //Then expect just last searchterm be triggered and output should be three even is empty, loaded and empty
+        XCTAssertEqual(result.events.count,3)
+        XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty, .loaded([.mockExpected()]),.empty])
+    }
     
     
     
