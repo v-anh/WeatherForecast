@@ -62,13 +62,13 @@ final class WeatherListViewModel: WeatherListViewModelType {
                 let displayModels = Self.makeDisplayModels(model.list,
                                                            unitType: self.config.unit)
                 return SearchWeatherState.loaded(displayModels)
-            }.debug("v-anh load from cache", trimOutput: true)
+            }
             .share()
         
         let searchRequest = requestParameter
             .flatMapLatest { [unowned self] parameter -> Observable<GetWeatherResult> in
                 return self.service.getWeather(parameter)
-            }.debug("v-anh fetch from server", trimOutput: true)
+            }
             .share(replay: 1, scope: .whileConnected)
               
         searchRequest
