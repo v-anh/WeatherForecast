@@ -28,42 +28,42 @@ Dependency inversion principle: All of the dependencies will be injected to View
 In MVVM ViewModel
 will mostly handle business logic: 
 - Received event search or loadview from view
-- Check Search logic make sure text is more than three characters before trigger search request, also make debounce 300ms to avoid reduce request trigger
-- Check data from Cache if valid then emit an event to update view other hand trigger request to the server, by this way it can make sure the app will always use latest data. So it will show cache data to use while fetching new data from the server.
-Since weather data change recently so it better to let the user get the newest update also not let use wait to long 
-- Making new server request to get newest data, after get response trigger another even to reload view with data from server
+- Check Search logic to make sure text contains more than three characters before triggering search request, also make debounce in 300ms to reduce request trigger
+- Check if data from Cache is valid, then emit an event to update view while triggering request to the server, this is to make sure the app will always use the latest data. Therefore, it will show cache data to use while fetching new data from the server.
+Since weather data change constantly, it's better to let the user get the newest update, and not to wait too long 
+- Making new server request to get the newest data. After getting the response, trigger another event to reload view with data from server
 - Handle error event from server-side
-- After getting a successful response from server trigger event to store response to Cache
+- After getting a successful response from server, trigger event to store response into Cache
 ### Network Layer
-##### Network layer is an abstract layer that exposes an protocol to making API request
-- NetworkServiceType: Is a protocol expose to outside to make API Request
-- RequestType Protocol: Provide an interface for request input lie: path, method, parameter, etc.
-- EnvironmentProtocol: Provide interface to config some API request constants
+##### Network layer is an abstract layer that exposes an protocol to make the API request
+- NetworkServiceType: Is a protocol to expose to outside to make API Request
+- RequestType Protocol: Provide an interface for requesting input, such as: path, method, parameter, etc.
+- EnvironmentProtocol: Provide interface to config some constants for API request 
 - APIError: Customize Error for API request
 - Method: GET/POST/PUT/DELETE
 - URLSessionNetworkService is an URLSession implementation of NetworkServiceType
 ### Cacheable Layer
-- CacheProtocol is main interface of Cache layer which is expose to out side the way to set/get from cache with given key
-- In this implementation: PersistentCache is an implementaion of CacheProtocol which will store data to [Document Directory](https://developer.apple.com/documentation/foundation/filemanager/searchpathdirectory/documentdirectory)
-. Since this app just fetch and show data from server so I choose File Store approach but if we need more securer or datase store then we can make other implementaion conform with CacheProtocol, it will not affect the one which are using Cache.
+- CacheProtocol is a main interface of Cache layer which is exposed to outside a way to set/get from cache with the given key
+- In this implementation: PersistentCache is an implementaion of CacheProtocol that will store data to [Document Directory](https://developer.apple.com/documentation/foundation/filemanager/searchpathdirectory/documentdirectory)
+. Since this app just fetch and show data from server, I choose File Store approach. However, if we need to store in other ways, we can make other implementaion that conform with CacheProtocol. This will not affect the one which are using Cache.
 ### Image Loader
-#### ImageLoader is Singleton which provide ability to download and cache image, ImageLoader required to provide implementations of ImadeDownloadType and ImageCacheType
-By Default ImageLoader will use NSCache and URLSession for cache and download image.
-Following Image best practice to reduce memory consumption when loading image to UIImageView, the UIImage should be resized before it loads into the container. The image after download
+#### ImageLoader is Singleton which provides the ability to download and cache image, ImageLoader requires to provide implementations of ImadeDownloadType and ImageCacheType
+By default, ImageLoader will use NSCache and URLSession for caching and downloading image.
+Following Image best practice to reduce memory consumption when loading image to UIImageView. The UIImage should be resized before it is loaded into the container. After downloading the image, it
 will be resized into the proper size. Key using for cache is the combine of url and size to avoid load inconsistence size or scale between image and container
 ## Dependencies
 #### Dependencies will be installed through [Swift Package Manager](https://swift.org/package-manager/)
 - RxSwift 6.2.0
 - RxSwiftExt 6.1.0
 ## UnitTest
-- Most of business logic in ViewModel, Network Layer, Cache and ImageLoader are covered by UnitTest
+- Most of the business logic in ViewModel, Network Layer, Cache and ImageLoader are covered by UnitTest
 ## Accessibility for Disability Supports:
-- Scaling Text is supported to change size of the font size, not yet support the size of any item if the font is too large
-- VoiceOver: The screen now able to read be VoiceOver but some components still not yet supported
+- Scaling Text is supported to change the font size. It has not yet supported the size of any item if the font is too large
+- VoiceOver: The screen reader is enable by VoiceOver. However, some components is still not yet supported
 ## TODO
-- Error Handler needs more friendly to use, it can be placed inside of Weather List. By this approach, use can continute to type search text while seeing the error.
+- Error Handler needs to be more friendly to use. It can be placed inside Weather List. By this approach, users can continute to type search text while seeing the error.
 - Missing UITesting 
-- Networklayer, Cache, ImageDownload can be separated into small modular like frameworks, it will be easier to maintain or reuse. 
+- Networklayer, Cache, ImageDownload can be separated into small modular like frameworks; therefore, it will be easier to maintain or reuse. 
 ## Checklist
 - [x] The application is a simple iOS application that is written by Swift.
 - [x] The application is able to retrieve the weather information from OpenWeatherMaps API. 
