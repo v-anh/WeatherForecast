@@ -55,14 +55,20 @@ will be resized into the proper size. Key using for cache is the combine of url 
 #### Dependencies will be installed through [Swift Package Manager](https://swift.org/package-manager/)
 - RxSwift 6.2.0
 - RxSwiftExt 6.1.0
-## UnitTest
+## UnitTesting
 - Most of the business logic in ViewModel, Network Layer, Cache and ImageLoader are covered by UnitTest
+## UITesting
+#### Making UI testable by acess acessibility identifier to do some flow tests:
+-  Assert UI component exist
+-  Search should render result in Tableview
+-  Search with incorect location will show Error popup
 ## Accessibility for Disability Supports:
 - Scaling Text is supported to change the font size. It has not yet supported the size of any item if the font is too large
 - VoiceOver: The screen reader is enable by VoiceOver. However, some components is still not yet supported
+
 ## TODO
 - Error Handler needs to be more friendly to use. It can be placed inside Weather List. By this approach, users can continute to type search text while seeing the error.
-- Missing UITesting 
+- UITesting is depending on real API, it can be solved by send `launchArguments` and catch it in CommandLine.arguments to modify app flow while runing. 
 - Networklayer, Cache, ImageDownload can be separated into small modular like frameworks; therefore, it will be easier to maintain or reuse. 
 ## Checklist
 - [x] The application is a simple iOS application that is written by Swift.
@@ -74,5 +80,6 @@ will be resized into the proper size. Key using for cache is the combine of url 
 - [x] The application is able to manage caching mechanism & lifecycle.  
 - [x] The application is able to load the weather icons remotely and displayed on every weather item at the right-hand-side.
 - [x] The application is able to handle failures.
+- [x] Acceptance Tests
 - [ ] The application is able to support the disability to scale large text for who can't see the text clearly
 - [ ] The application is able to support the disability to read out the text using VoiceOver controls.
