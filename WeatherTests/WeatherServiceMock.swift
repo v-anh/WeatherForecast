@@ -29,6 +29,14 @@ extension WeatherResponseModel: Equatable {
         WeatherResponseModel.loadFromFile("WeatherResponse")
     }
     
+    static func inConsistenceStub(_ weatherList: [WeatherFactor]? = nil) -> WeatherResponseModel {
+        return WeatherResponseModel(cod: nil,
+                                    message: nil,
+                                    cnt: nil,
+                                    city: nil,
+                                    list: weatherList)
+    }
+    
     public static func == (lhs: WeatherResponseModel, rhs: WeatherResponseModel) -> Bool {
         return lhs.cod == rhs.cod &&
         lhs.message == rhs.message &&
@@ -36,7 +44,6 @@ extension WeatherResponseModel: Equatable {
         lhs.city == rhs.city &&
         lhs.list == rhs.list
     }
-    
 }
 
 extension City: Equatable {
@@ -47,6 +54,25 @@ extension City: Equatable {
     }
 }
 extension WeatherFactor: Equatable {
+    static func inConsistenceStub(dt: TimeInterval? = nil,
+                                  temp: Temp? = nil,
+                                  pressure: Double? = nil,
+                                  humidity: Double? = nil,
+                                  weather: [Weather]? = nil) -> WeatherFactor {
+        return WeatherFactor(dt: dt,
+                             sunrise: nil,
+                             sunset: nil,
+                             temp: temp,
+                             pressure: pressure,
+                             humidity: humidity,
+                             weather: weather,
+                             speed: nil,
+                             deg: nil,
+                             gust: nil,
+                             clouds: nil,
+                             pop: nil,
+                             rain: nil)
+    }
     public static func == (lhs: WeatherFactor, rhs: WeatherFactor) -> Bool {
         return lhs.dt == rhs.dt &&
             lhs.sunset == rhs.sunset &&

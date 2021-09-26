@@ -193,4 +193,119 @@ class WeatherListViewModelTests: XCTestCase {
     }
     
     
+    //Error
+    func testShouldHandleErrorWhenSearchApiResponseError() {
+        //Given ViewModel input & Mock search weather with error
+        let loadView = PublishRelay<Void>()
+        let search = PublishRelay<String>()
+        let result = scheduler.createObserver(SearchWeatherState.self)
+        serviceMock.mockResult = .failure(APIError.badRequest)
+        
+        let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
+                                                                          search: search))
+        output.weatherSearchOutput
+            .drive(result)
+            .disposed(by: disposeBag)
+        
+        //When trigger loadview and search
+        loadView.accept(())
+        search.accept("saigon")
+        scheduler.start()
+        
+        //Then expect output should be three events: init as empty and error
+        XCTAssertEqual(result.events.count,2)
+        XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty,.haveError(APIError.badRequest)])
+        XCTAssertEqual(serviceMock.parameter?.searchTerm,"saigon")
+        XCTAssertEqual(serviceMock.parameter?.unit,"metric")
+        XCTAssertEqual(cacheMock.getWeatherKeyHooked,"saigonmetric2.5")
+    }
+    
+    func testShouldNotPersistCacheWhenSearchApiHaveErorr() {
+        //Given ViewModel input & Mock search weather with error
+        let loadView = PublishRelay<Void>()
+        let search = PublishRelay<String>()
+        let result = scheduler.createObserver(SearchWeatherState.self)
+        serviceMock.mockResult = .failure(APIError.badRequest)
+        
+        let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
+                                                                          search: search))
+        output.weatherSearchOutput
+            .drive(result)
+            .disposed(by: disposeBag)
+        
+        //When trigger loadview and search
+        loadView.accept(())
+        search.accept("saigon")
+        scheduler.start()
+        
+        //Then expect output should be three events: init as empty and error
+        XCTAssertEqual(result.events.count,2)
+        XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty,.haveError(APIError.badRequest)])
+        XCTAssertEqual(serviceMock.parameter?.searchTerm,"saigon")
+        XCTAssertEqual(serviceMock.parameter?.unit,"metric")
+        XCTAssertEqual(cacheMock.getWeatherKeyHooked,"saigonmetric2.5")
+        XCTAssertNil(cacheMock.setWeatherKeyHooked)
+        XCTAssertNil(cacheMock.weatherParameterhook)
+    }
+
+    //Success but empty
+    func testShouldNotMakeDisplayModelWhenResponseInconsistenceData() {
+        //Given ViewModel input and mock api with incorect data response
+        let loadView = PublishRelay<Void>()
+        let search = PublishRelay<String>()
+        let result = scheduler.createObserver(SearchWeatherState.self)
+        let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
+                                                                          search: search))
+        output.weatherSearchOutput
+            .drive(result)
+            .disposed(by: disposeBag)
+        
+        //When trigger loadview and multiple search and mock inconsistence WeatherResponse
+        let inConsistenceWeatherFactor = WeatherFactor.inConsistenceStub(dt: nil, temp: nil, pressure: nil, humidity: nil, weather: nil)
+        loadView.accept(())
+        scheduler.createColdObservable([.next(0, ("saigon", WeatherResponseModel.inConsistenceStub())),
+                                        .next(5, ("saigon", WeatherResponseModel.inConsistenceStub([]))),
+                                        .next(15, ("saigon", WeatherResponseModel.inConsistenceStub([inConsistenceWeatherFactor])))])
+            .subscribe { [unowned self] searchTerm, mockReponse in
+                self.serviceMock.mockResult = .success(mockReponse)
+                search.accept(searchTerm)
+            }.disposed(by: disposeBag)
+
+        scheduler.start()
+        scheduler.start()
+        
+        //Then expect output should be trigger all empty result
+        XCTAssertEqual(result.events.count,4)
+        XCTAssertEqual(result.events.compactMap(pullBackToElement),[.empty,.empty,.empty,.empty])
+        XCTAssertEqual(serviceMock.parameter?.searchTerm,"saigon")
+        XCTAssertEqual(serviceMock.parameter?.unit,"metric")
+    }
+    
+    //Change config should get other cache
+    func testCacheKeyShouldBeCombineOfSearchTermMetricAndCnt() {
+        //Given ViewModel input & Mock cache data
+        let loadView = PublishRelay<Void>()
+        let search = PublishRelay<String>()
+        let result = scheduler.createObserver(SearchWeatherState.self)
+        
+        let output = viewModel.transform(input: WeatherListViewModelInput(loadView: loadView,
+                                                                          search: search))
+        output.weatherSearchOutput
+            .drive(result)
+            .disposed(by: disposeBag)
+        
+        //When trigger loadview and search
+        loadView.accept(())
+        search.accept("saigon")
+        scheduler.start()
+        
+        //Then expect output should be three events: init as empty, loaded with cache and server response
+        XCTAssertEqual(cacheMock.getWeatherKeyHooked,"saigonmetric2.5")
+    }
+    
+    //Clear search term should back to emtpy
+    
+    
+    
+    
 }
