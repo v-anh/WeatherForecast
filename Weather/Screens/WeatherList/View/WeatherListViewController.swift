@@ -73,7 +73,6 @@ extension WeatherListViewController {
     }
     
     func updateView(_ state: SearchWeatherState) {
-        print("Update view with state: \(state)")
         switch state {
         case .empty:
             self.updateDataSource([])

@@ -50,15 +50,12 @@ public final class ImageLoader: NSObject, ImageLoaderType {
     public func loadImage(from url: URL, size: CGSize) -> Observable<UIImage?> {
         if let image = cache.getImage(key: makeCacheKey(url, size: size)) {
 
-            print("cached from last download \(url)")
             return .just(image)
         }
 
         if let publisher = observableCache[url] {
-            print("reuse form last download \(url)")
             return publisher
         }
-        print("start download \(url), \(size)")
         let imageDownload =  self.downloader.downloadImage(from: url)
             .observe(on: ConcurrentDispatchQueueScheduler(qos: .background))
             .map { [weak self ] image -> UIImage? in

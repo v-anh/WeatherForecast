@@ -14,7 +14,6 @@ extension RequestType {
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers
         
-        print(request)
         return request
     }
     private func url(with environment: EnvironmentProtocol) -> URL? {
