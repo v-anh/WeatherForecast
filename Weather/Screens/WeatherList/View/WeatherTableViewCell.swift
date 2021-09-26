@@ -32,6 +32,7 @@ class WeatherTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.accessibilityIdentifier = "WeatherTableViewCell"
         self.setupUI()
     }
     

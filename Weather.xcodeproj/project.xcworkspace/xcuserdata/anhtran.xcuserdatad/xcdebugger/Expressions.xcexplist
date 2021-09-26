@@ -3,21 +3,15 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "static Decodable.loadFromFile(_:):Decodeable+Extension.swift">
+         contextName = "WeatherUITests.testExample():WeatherUITests.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Bundle.main">
-            </PersistentString>
-            <PersistentString
-               value = "Bundle(for: WeatherTests.self)">
+               value = "app.segmentedControls.buttons[&quot;Cancel&quot;]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "Cache.insert(_:forKey:):Cache.swift">
-      </ContextState>
-      <ContextState
-         contextName = "Cache.Entry.init(value:expirationDate:):Cache.swift">
+         contextName = "URLSessionNetWorkServiceTests.testShouldMakeCorrectUrlRequest():URLSessionNetWorkServiceTests.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in WeatherListViewController.searchController.getter:WeatherListViewController.swift">
@@ -29,6 +23,34 @@
                value = "searchController.searchBar.searchTextField.accessibilityHint">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static Decodable.loadFromFile(_:):Decodeable+Extension.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "Bundle(for: WeatherTests.self)">
+            </PersistentString>
+            <PersistentString
+               value = "Bundle.main">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Cache.Entry.init(value:expirationDate:):Cache.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ImageLoaderTests.testShouldDownloadImageSuccess():ImageLoaderTests.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "imageResult!">
+            </PersistentString>
+            <PersistentString
+               value = "image?.resize(10)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Cache.insert(_:forKey:):Cache.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

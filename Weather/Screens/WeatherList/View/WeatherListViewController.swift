@@ -27,6 +27,7 @@ class WeatherListViewController: BaseViewController {
         Accessibility(label: "Search text field",
                       hint: "Search weather today, just type the city you want to know!", trails: .none)
             .apply(to: searchController.searchBar.searchTextField)
+        searchController.searchBar.searchTextField.accessibilityIdentifier = "searchTextField"
         return searchController
     }()
     
@@ -76,17 +77,11 @@ extension WeatherListViewController {
         switch state {
         case .empty:
             self.updateDataSource([])
-            self.finishLoading()
             self.tableView.setEmptyMessage("How is the weather?")
         case .loaded(let weatherList):
-            self.finishLoading()
             self.updateDataSource(weatherList)
-        case .loading:
-            self.startLoading()
-            break;
-        case .haveError(let error):
-            self.finishLoading()
-            self.showError(error)
+        case .haveError:
+            self.showError("Something went wrong. Please try again!")
         }
     }
 }
@@ -95,6 +90,7 @@ extension WeatherListViewController {
 //MARK: - Weather Tableview
 extension WeatherListViewController {
     private func setupTableView() {
+        tableView.accessibilityIdentifier = "weatherTableView"
         tableView.tableFooterView = UIView()
         tableView.dataSource = dataSource
         tableView.register(UINib(nibName: WeatherTableViewCell.className, bundle: nil),
