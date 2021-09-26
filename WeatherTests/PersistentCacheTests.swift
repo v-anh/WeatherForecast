@@ -16,6 +16,7 @@ class PersistentCacheTests: XCTestCase {
     var disposeBag: DisposeBag!
     var scheduler: TestScheduler!
     override func setUpWithError() throws {
+        clearTempFile(path)
         disposeBag = DisposeBag()
         scheduler = TestScheduler(initialClock: 0)
         cache = PersistentCache(path: path)
@@ -88,5 +89,20 @@ extension PersistentCacheTests {
                   in: .userDomainMask)
             .first?
             .appendingPathComponent(path)
+    }
+    
+    func clearTempFile(_ path: String) {
+        guard let directory = self.directoryURL(path) else {
+            return
+        }
+        let fileManager = FileManager.default
+        do {
+            let filePaths = try fileManager.contentsOfDirectory(atPath: directory.absoluteString)
+            for filePath in filePaths {
+                try fileManager.removeItem(atPath: filePath)
+            }
+        } catch {
+            print("Could not clear temp folder: \(error)")
+        }
     }
 }

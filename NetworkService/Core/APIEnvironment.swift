@@ -42,7 +42,7 @@ enum APIEnvironment: EnvironmentProtocol {
     var weatherIconUrl:String {
         switch self {
         case .development:
-            return "http://openweathermap.org/img/w/"
+            return ApiConstants.imageUrl
         }
     }
 }

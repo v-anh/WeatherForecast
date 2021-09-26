@@ -39,7 +39,10 @@ extension URLSessionNetworkService {
             return .just(.failure(APIError.badRequest))
         }
         return Observable<APIResponse<T>>.create { [weak self] observer in
-            return URLSession.shared.rx.response(request: request).subscribe { [weak self] response, data in
+            guard let self = self else {
+                return Disposables.create()
+            }
+            return self.session.rx.response(request: request).subscribe { [weak self] response, data in
                 guard let self = self else {return observer.onNext(.failure(.badRequest))}
                 let result = self.verify(data: data, urlResponse: response)
                 switch result {

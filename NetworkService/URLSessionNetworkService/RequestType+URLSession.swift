@@ -23,7 +23,8 @@ extension RequestType {
         }
         urlComponents.path = urlComponents.path + path
         urlComponents.queryItems = queryItems
-        urlComponents.queryItems?.append(URLQueryItem(name: "appid", value: environment.apiKey))
+        urlComponents.queryItems?.append(URLQueryItem(name: "appid",
+                                                      value: environment.apiKey))
         return urlComponents.url
     }
     
