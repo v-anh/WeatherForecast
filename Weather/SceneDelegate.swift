@@ -16,6 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
           guard let windowScene = (scene as? UIWindowScene) else { return }
           window = UIWindow(frame: UIScreen.main.bounds)
+        ImageLoader.setup(.default())
         let networkService = URLSessionNetworkService()
         let service = WeatherService(networkService)
         let viewModel = WeatherListViewModel(service: service, config: WeatherConfig())
