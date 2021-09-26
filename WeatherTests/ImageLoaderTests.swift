@@ -94,28 +94,3 @@ class ImageLoaderTests: XCTestCase {
     }
 
 }
-
-class MockImageCache: ImageCacheType {
-    var setImageCallStack = [String]()
-    var setImageHooked: UIImage?
-    func setImage(_ image: UIImage, key: String) {
-        setImageHooked = image
-        setImageCallStack.append(key)
-    }
-    
-    var getImageHooked: UIImage?
-    var getImageCallStack = [String]()
-    func getImage(key: String) -> UIImage? {
-        getImageCallStack.append(key)
-        return getImageHooked
-    }
-}
-
-class MockImageDownload: ImageDownloadType {
-    var callStack = [URL]()
-    var mockImageResponse: UIImage?
-    func downloadImage(from url: URL) -> Observable<UIImage?> {
-        callStack.append(url)
-        return .just(mockImageResponse)
-    }
-}

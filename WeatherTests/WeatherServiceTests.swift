@@ -49,15 +49,6 @@ class WeatherServiceTests: XCTestCase {
     }
 
 }
-
-struct EnvironmentMock: EnvironmentProtocol {
-    var headers: [String : String] = [:]
-    
-    var baseURL: String = "baseURL"
-    
-    var apiKey: String = "apiKey"
-}
-
 class NetworkServiceMock: NetworkServiceType{
     var environment: EnvironmentProtocol
     init(_ environment: EnvironmentProtocol) {

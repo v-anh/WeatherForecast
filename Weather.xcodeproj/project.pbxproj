@@ -23,11 +23,17 @@
 		66AC47C0270076B50001B3F3 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 66AC47BF270076B50001B3F3 /* RxBlocking */; };
 		66AC47C2270088540001B3F3 /* ImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47C1270088540001B3F3 /* ImageLoaderTests.swift */; };
 		66AC47C52700B2E20001B3F3 /* ImageCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47C42700B2E20001B3F3 /* ImageCacheTest.swift */; };
+		66AC47C72700B6E50001B3F3 /* ImageDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47C62700B6E50001B3F3 /* ImageDownload.swift */; };
+		66AC47C92700B6FF0001B3F3 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47C82700B6FF0001B3F3 /* ImageCache.swift */; };
+		66AC47CB2700B79C0001B3F3 /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47CA2700B79C0001B3F3 /* MockURLProtocol.swift */; };
+		66AC47CD2700B7F90001B3F3 /* EnvironmentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47CC2700B7F90001B3F3 /* EnvironmentMock.swift */; };
+		66AC47CF2700B82A0001B3F3 /* MockImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47CE2700B82A0001B3F3 /* MockImageCache.swift */; };
+		66AC47D12700B8680001B3F3 /* MockImageDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47D02700B8680001B3F3 /* MockImageDownload.swift */; };
+		66AC47D32700B8C00001B3F3 /* CacheMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AC47D22700B8C00001B3F3 /* CacheMock.swift */; };
 		66F9C4DC26FCC33300F7E6A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F9C4DB26FCC33300F7E6A6 /* AppDelegate.swift */; };
 		66F9C4DE26FCC33300F7E6A6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F9C4DD26FCC33300F7E6A6 /* SceneDelegate.swift */; };
 		66F9C4E526FCC33300F7E6A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66F9C4E426FCC33300F7E6A6 /* Assets.xcassets */; };
 		66F9C4E826FCC33300F7E6A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66F9C4E626FCC33300F7E6A6 /* LaunchScreen.storyboard */; };
-		66F9C4F326FCC33400F7E6A6 /* WeatherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F9C4F226FCC33400F7E6A6 /* WeatherTests.swift */; };
 		66F9C4FE26FCC33400F7E6A6 /* WeatherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F9C4FD26FCC33400F7E6A6 /* WeatherUITests.swift */; };
 		66F9C50D26FCC3AE00F7E6A6 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 66F9C50C26FCC3AE00F7E6A6 /* RxSwift */; };
 		66F9C51126FCC3AE00F7E6A6 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 66F9C51026FCC3AE00F7E6A6 /* RxRelay */; };
@@ -98,6 +104,13 @@
 		6683CF8D270068A5002BE2CD /* URLSessionNetWorkServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionNetWorkServiceTests.swift; sourceTree = "<group>"; };
 		66AC47C1270088540001B3F3 /* ImageLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderTests.swift; sourceTree = "<group>"; };
 		66AC47C42700B2E20001B3F3 /* ImageCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheTest.swift; sourceTree = "<group>"; };
+		66AC47C62700B6E50001B3F3 /* ImageDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownload.swift; sourceTree = "<group>"; };
+		66AC47C82700B6FF0001B3F3 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		66AC47CA2700B79C0001B3F3 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
+		66AC47CC2700B7F90001B3F3 /* EnvironmentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentMock.swift; sourceTree = "<group>"; };
+		66AC47CE2700B82A0001B3F3 /* MockImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockImageCache.swift; sourceTree = "<group>"; };
+		66AC47D02700B8680001B3F3 /* MockImageDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockImageDownload.swift; sourceTree = "<group>"; };
+		66AC47D22700B8C00001B3F3 /* CacheMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheMock.swift; sourceTree = "<group>"; };
 		66F9C4D826FCC33300F7E6A6 /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F9C4DB26FCC33300F7E6A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		66F9C4DD26FCC33300F7E6A6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -105,7 +118,6 @@
 		66F9C4E726FCC33300F7E6A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		66F9C4E926FCC33300F7E6A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66F9C4EE26FCC33400F7E6A6 /* WeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		66F9C4F226FCC33400F7E6A6 /* WeatherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTests.swift; sourceTree = "<group>"; };
 		66F9C4F426FCC33400F7E6A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66F9C4F926FCC33400F7E6A6 /* WeatherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66F9C4FD26FCC33400F7E6A6 /* WeatherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherUITests.swift; sourceTree = "<group>"; };
@@ -237,6 +249,8 @@
 			isa = PBXGroup;
 			children = (
 				66F9C54526FCC6F200F7E6A6 /* ImageLoader.swift */,
+				66AC47C62700B6E50001B3F3 /* ImageDownload.swift */,
+				66AC47C82700B6FF0001B3F3 /* ImageCache.swift */,
 			);
 			path = ImageLoader;
 			sourceTree = "<group>";
@@ -283,6 +297,11 @@
 				66F9C56526FCF10D00F7E6A6 /* WeatherResponse.json */,
 				66F9C55A26FCE60500F7E6A6 /* WeatherServiceMock.swift */,
 				66582D2C26FF3D5F0006CF04 /* WeatherCacheServiceMock.swift */,
+				66AC47CA2700B79C0001B3F3 /* MockURLProtocol.swift */,
+				66AC47CC2700B7F90001B3F3 /* EnvironmentMock.swift */,
+				66AC47CE2700B82A0001B3F3 /* MockImageCache.swift */,
+				66AC47D02700B8680001B3F3 /* MockImageDownload.swift */,
+				66AC47D22700B8C00001B3F3 /* CacheMock.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -340,16 +359,15 @@
 			children = (
 				6683CF8C27006611002BE2CD /* Extension */,
 				6683CF8B270065FB002BE2CD /* Mock */,
-				66F9C4F226FCC33400F7E6A6 /* WeatherTests.swift */,
 				66AC47C1270088540001B3F3 /* ImageLoaderTests.swift */,
 				66F9C55E26FCE83100F7E6A6 /* WeatherListViewModelTests.swift */,
 				6683CF87270065DC002BE2CD /* CacheServiceTests.swift */,
 				6683CF89270065F1002BE2CD /* WeatherDisplayModelTests.swift */,
 				6683CF85270065C5002BE2CD /* WeatherServiceTests.swift */,
 				6683CF83270059C3002BE2CD /* PersistentCacheTests.swift */,
-				66F9C4F426FCC33400F7E6A6 /* Info.plist */,
 				6683CF8D270068A5002BE2CD /* URLSessionNetWorkServiceTests.swift */,
 				66AC47C42700B2E20001B3F3 /* ImageCacheTest.swift */,
+				66F9C4F426FCC33400F7E6A6 /* Info.plist */,
 			);
 			path = WeatherTests;
 			sourceTree = "<group>";
@@ -569,7 +587,9 @@
 			files = (
 				66F9C53E26FCC63600F7E6A6 /* WeatherResponseModel.swift in Sources */,
 				66F9C51B26FCC4C700F7E6A6 /* WeatherRequest.swift in Sources */,
+				66AC47C92700B6FF0001B3F3 /* ImageCache.swift in Sources */,
 				66F9C52826FCC54900F7E6A6 /* RequestType.swift in Sources */,
+				66AC47C72700B6E50001B3F3 /* ImageDownload.swift in Sources */,
 				66F9C55326FCC94800F7E6A6 /* URLSessionNetworkService.swift in Sources */,
 				66F9C54126FCC6AA00F7E6A6 /* WeatherTableViewCell.swift in Sources */,
 				66582D2B26FF3A3E0006CF04 /* UnitType.swift in Sources */,
@@ -606,19 +626,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66AC47CF2700B82A0001B3F3 /* MockImageCache.swift in Sources */,
+				66AC47CD2700B7F90001B3F3 /* EnvironmentMock.swift in Sources */,
 				6683CF86270065C5002BE2CD /* WeatherServiceTests.swift in Sources */,
 				66AC47C52700B2E20001B3F3 /* ImageCacheTest.swift in Sources */,
+				66AC47D32700B8C00001B3F3 /* CacheMock.swift in Sources */,
 				66F9C55B26FCE60500F7E6A6 /* WeatherServiceMock.swift in Sources */,
 				66AC47C2270088540001B3F3 /* ImageLoaderTests.swift in Sources */,
 				66582D2D26FF3D5F0006CF04 /* WeatherCacheServiceMock.swift in Sources */,
 				6683CF8A270065F1002BE2CD /* WeatherDisplayModelTests.swift in Sources */,
 				6683CF8E270068A5002BE2CD /* URLSessionNetWorkServiceTests.swift in Sources */,
+				66AC47CB2700B79C0001B3F3 /* MockURLProtocol.swift in Sources */,
 				66F9C55F26FCE83100F7E6A6 /* WeatherListViewModelTests.swift in Sources */,
 				66F9C55D26FCE6F300F7E6A6 /* Decodeable+Extension.swift in Sources */,
 				6683CF84270059C3002BE2CD /* PersistentCacheTests.swift in Sources */,
-				66F9C4F326FCC33400F7E6A6 /* WeatherTests.swift in Sources */,
 				66F9C56126FCEC3F00F7E6A6 /* XCTestCase+Extension.swift in Sources */,
 				6683CF88270065DC002BE2CD /* CacheServiceTests.swift in Sources */,
+				66AC47D12700B8680001B3F3 /* MockImageDownload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -88,7 +88,9 @@ class WeatherTableViewCell: UITableViewCell {
         presureValue.text = String(format: "%.0f", model.pressure)
         humidityValue.text = String(format: "%.0f", model.humidity)
         descriptionValue.text = model.description
-        Accessibility(label: "\(model.description)", hint: "", trails: .image).apply(to: weatherIcon)
+        Accessibility(label: "\(model.description)",
+                      hint: "",
+                      trails: .image).apply(to: weatherIcon)
     }
     
 }

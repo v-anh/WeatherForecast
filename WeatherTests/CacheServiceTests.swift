@@ -59,23 +59,3 @@ class CacheServiceTests: XCTestCase {
     }
 
 }
-
-
-class CacheMock: CacheProtocol {
-    var objectHooked: Encodable?
-    var setKeyHooked: String?
-    func set<T>(object: T, key: String) -> Observable<Void> where T : Encodable {
-        objectHooked = object
-        setKeyHooked = key
-        return .just(())
-    }
-    
-    var typeHooked: Decodable.Type?
-    var objectKeyHooked: String?
-    var mockReturn: WeatherResponseModel!
-    func get<T>(for key: String, type: T.Type) -> Observable<T> where T : Decodable {
-        objectKeyHooked = key
-        typeHooked = type
-        return .just(mockReturn as! T)
-    }
-}
