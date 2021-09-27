@@ -6,6 +6,9 @@
 //
 
 import Foundation
+
+
+/// Request Input Type
 public protocol RequestType {
     var path: String { get }
     var method: Method { get }

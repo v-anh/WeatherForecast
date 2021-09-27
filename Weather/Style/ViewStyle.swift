@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// ViewStyle: Provide configuration to add Style then apply it into View
 public struct ViewStyle<T> {
     private let styling: (T) -> Void
     

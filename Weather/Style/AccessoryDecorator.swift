@@ -6,10 +6,11 @@
 //
 
 import UIKit
+
+
+/// AccessoryDecorator: Abstract protocol to add inject Accessory
 protocol AccessoryDecorator {
     associatedtype Target
-    var label: String { get }
-    var hint: String { get }
     @discardableResult
     func apply(to target: Target) -> Target
 }

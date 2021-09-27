@@ -9,7 +9,14 @@ import Foundation
 import UIKit
 import RxSwift
 
+
+/// ImageLoader
 protocol ImageLoaderType {
+    
+    /// Load Image from Url with Cache
+    /// - Parameters:
+    ///   - url: Image Url
+    ///   - size: Size of Image container
     func loadImage(from url: URL, size: CGSize) -> Observable<UIImage?>
 }
 

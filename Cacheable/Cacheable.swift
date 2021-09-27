@@ -8,12 +8,28 @@
 import Foundation
 import RxSwift
 
+
+/// Cache Error Type
 enum CacheError: Swift.Error {
     case cache
     case getObject
 }
+
+
+/// Abstract Cache
 protocol CacheProtocol {
+    
+    /// Set object to Cache
+    /// - Parameters:
+    ///   - object: Endcodeable Object
+    ///   - key: Unique String Key
     func set<T:Encodable>(object: T, key: String) -> Observable<Void>
+    
+    
+    /// Get object from Cache
+    /// - Parameters:
+    ///   - key: Unique String Key
+    ///   - type: Decodable Type
     func get<T:Decodable>(for key: String, type:T.Type) -> Observable<T>
 }
 
